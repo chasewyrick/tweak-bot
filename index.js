@@ -13,6 +13,9 @@ client.on("message", async message => {
     /**
      * @description Start by checking if there is any tweak on default repo, which should be marked as such: `[[tweakname]]`
      */
+    if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g) || message.content.match(/(?<=\(\()(.*)(?=\)\))/g) || message.content.match(/(?<=\[)(.*)(?=\))/g)) {
+        const m = await message.channel.send("🔄");
+    }
     if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g)) { //wow i actually managed to make a regex
         let args = message.content.trim().match(/(?<=\[\[)(.*)(?=\]\])/g);
         const tweak = await cydia.getAllInfo(args[0]); //thanks @1Conan
@@ -31,6 +34,7 @@ client.on("message", async message => {
             .addField("Price", tweak.price ? `$${tweak.price}` : "Free", true)
             .addField("Repository", `[${tweak.repo.name}](${tweak.repo.link})`, true);
         message.channel.send(embed);
+        m.delete();
         return;
     } else if (message.content.match(/(?<=\(\()(.*)(?=\)\))/g)) {
         /**
@@ -60,6 +64,7 @@ client.on("message", async message => {
                 .addField(`Sections (${body.section_count})`, `${body.sections.map(e => `${e.replace(",", "")}\n`)}`, true);
             message.channel.send(embed);
         });
+        m.delete();
         return;
     }
     /**
@@ -100,8 +105,7 @@ client.on("message", async message => {
                 .addField("Download", `[Link](${tweak.filename})`, true)
                 .addField("Add to cydia", `[Click here.](https://cydia.saurik.com/api/share#?source=${link})`, true)
             message.channel.send(embed);
-            //.addField("Price", tweak.price)
-            // temp disabled .addField("Description", tweak.desc)
+            m.delete();
         }
     );
 });
