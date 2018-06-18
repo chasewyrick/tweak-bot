@@ -15,11 +15,14 @@ client.on("message", async message => {
      */
     if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g) || message.content.match(/(?<=\(\()(.*)(?=\)\))/g) || message.content.match(/(?<=\[)(.*)(?=\))/g)) {
         const m = await message.channel.send("🔄");
-    }
+    } else return;
     if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g)) { //wow i actually managed to make a regex
         let args = message.content.trim().match(/(?<=\[\[)(.*)(?=\]\])/g);
         const tweak = await cydia.getAllInfo(args[0]); //thanks @1Conan
-        if (!tweak) return message.reply("package not found.");
+        if (!tweak) {
+            m.delete();
+            return message.reply("package not found.");
+        }
         const embed = new Discord.MessageEmbed()
             .setTimestamp()
             .setAuthor(client.user.username, client.user.displayAvatarURL())
@@ -43,11 +46,17 @@ client.on("message", async message => {
         let link = message.content.trim().match(/(?<=\(\()(.*)(?=\)\))/g)[0];
         if (!link.match(
                 /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-            )) return message.reply("invalid URL.");
+            )) {
+            m.delete();
+            return message.reply("invalid URL.");
 
+        }
         request.get(`https://cydia.s0n1c.org/cydia/?url=${link}`, (err, resp, body) => { //TODO: test this
             body = JSON.parse(body);
-            if (!body.status) return message.reply("unable to find specified repository.");
+            if (!body.status) {
+                m.delete();
+                return message.reply("unable to find specified repository.");
+            }
             const embed = new Discord.MessageEmbed()
                 .setTimestamp()
                 .setThumbnail(body.info.icon)
@@ -79,12 +88,15 @@ client.on("message", async message => {
     const link = args[1];
     if (!link.match(
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
-        )) return message.reply("invalid URL.");
+        )) {
+        m.delete();
+        return message.reply("invalid URL.");
+    }
     request.get(
         `https://cydia.s0n1c.org/cydia/?url=${link}&q=${tweak}`,
         (err, resp, body) => {
-            body = JSON.parse(body)
-            if (err) return;
+            body = JSON.parse(body);
+            if (err) return message.reply("Unable to reach API.");
             if (!body.status) {
                 return message.reply("package not found.");
             }
@@ -105,9 +117,9 @@ client.on("message", async message => {
                 .addField("Download", `[Link](${tweak.filename})`, true)
                 .addField("Add to cydia", `[Click here.](https://cydia.saurik.com/api/share#?source=${link})`, true)
             message.channel.send(embed);
-            m.delete();
         }
     );
+    m.delete();
 });
 
 client.login(config.token);
