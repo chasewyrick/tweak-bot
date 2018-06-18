@@ -13,8 +13,9 @@ client.on("message", async message => {
     /**
      * @description Start by checking if there is any tweak on default repo, which should be marked as such: `[[tweakname]]`
      */
+    let m;
     if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g) || message.content.match(/(?<=\(\()(.*)(?=\)\))/g) || message.content.match(/(?<=\[)(.*)(?=\))/g)) {
-        const m = await message.channel.send("🔄");
+        m = await message.channel.send("🔄");
     } else return;
     if (message.content.match(/(?<=\[\[)(.*)(?=\]\])/g)) { //wow i actually managed to make a regex
         let args = message.content.trim().match(/(?<=\[\[)(.*)(?=\]\])/g);
