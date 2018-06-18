@@ -1,16 +1,16 @@
 {
   "name": "tweak-bot",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "Oliver Boudet",
   "license": "GPL-3.0",
   "dependencies": {
     "cydia-api-node": "^1.0.2",
-    "discord.js": "github:hydrabolt/discord.js",
+    "discord.js": "github:hydrabolt/discord.js#1cdee7b48a13f571f563e7d8fe474908b64c4a5b",
     "request": "^2.87.0"
   }
 }
