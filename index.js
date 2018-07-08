@@ -71,7 +71,7 @@ client.on("message", async message => {
                 .addField("Description", body.info.Description, true)
                 .addBlankField()
                 .addField("Package Count", body.info.package_count, true)
-                .addField(`Sections (${body.section_count})`, `${body.sections.map(e => `${e.replace(",", "")}\n`)}`, true);
+                .addField(`Sections (${body.section_count})`, `${Object.keys(body.sections).join("\n")}`, true);
             message.channel.send(embed);
         });
         m.delete();
