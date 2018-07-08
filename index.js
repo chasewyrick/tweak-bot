@@ -114,7 +114,7 @@ client.on("message", async message => {
                 .addField("Latest Version", tweak.version, true)
                 .addField("Section", tweak.section, true)
                 .addBlankField()
-                .addField("Price", tweak.price ? `$${tweak.price}` : "Free (most likely)", true)
+                .addField("Price", tweak.price ? `$${tweak.price}` : "N/A", true)
                 .addField("Download", `[Link](${tweak.filename})`, true)
                 .addField("Add to cydia", `[Click here.](https://cydia.saurik.com/api/share#?source=${link})`, true)
             message.channel.send(embed);
